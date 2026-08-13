@@ -1,6 +1,7 @@
 /* =========================================================
-   BASKETBALL JOURNEY
+   🏀 BASKETBALL JOURNEY
    STYLE PRINCIPAL
+   PC + MOBILE
 ========================================================= */
 
 * {
@@ -10,37 +11,87 @@
 }
 
 :root {
-  --bg: #0b0d12;
-  --bg-secondary: #11141b;
-  --card: #171b24;
-  --card-hover: #1d222d;
-  --border: #292f3b;
-  --text: #f5f7fa;
-  --muted: #9299a8;
-  --primary: #ff7a18;
-  --primary-hover: #ff8f3d;
+  --bg: #080a0f;
+  --bg-secondary: #0f1219;
+  --card: #151922;
+  --card-hover: #1b202b;
+
+  --border: #282e3a;
+  --border-light: #353c4b;
+
+  --text: #f7f8fb;
+  --muted: #929aaa;
+
+  --primary: #ff7417;
+  --primary-hover: #ff8c3d;
+  --primary-soft: rgba(255, 116, 23, 0.12);
+
   --success: #36d98b;
+  --success-soft: rgba(54, 217, 139, 0.12);
+
   --danger: #ff5d6c;
+  --danger-soft: rgba(255, 93, 108, 0.12);
+
+  --warning: #ffc857;
+  --warning-soft: rgba(255, 200, 87, 0.12);
+
+  --blue: #5ca9ff;
+  --blue-soft: rgba(92, 169, 255, 0.12);
+
+  --purple: #a879ff;
+  --purple-soft: rgba(168, 121, 255, 0.12);
+
   --radius: 16px;
+  --radius-small: 11px;
+
+  --shadow:
+    0 18px 50px rgba(0, 0, 0, 0.28);
+
+  --transition:
+    0.2s ease;
 }
 
 html {
   min-height: 100%;
   background: var(--bg);
+  scroll-behavior: smooth;
 }
 
 body {
   min-height: 100vh;
-  font-family: Arial, Helvetica, sans-serif;
-  background:
-    radial-gradient(circle at top, rgba(255, 122, 24, 0.08), transparent 35%),
-    var(--bg);
+
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Arial,
+    Helvetica,
+    sans-serif;
+
   color: var(--text);
+  background:
+    radial-gradient(
+      circle at 50% -10%,
+      rgba(255, 116, 23, 0.13),
+      transparent 35%
+    ),
+    radial-gradient(
+      circle at 100% 100%,
+      rgba(255, 116, 23, 0.035),
+      transparent 30%
+    ),
+    var(--bg);
+
   line-height: 1.5;
+  overflow-x: hidden;
 }
 
 button,
-input {
+input,
+select,
+textarea {
   font: inherit;
 }
 
@@ -53,6 +104,11 @@ button:disabled {
   opacity: 0.45;
 }
 
+::selection {
+  color: white;
+  background: var(--primary);
+}
+
 
 /* =========================================================
    STRUCTURE
@@ -63,8 +119,10 @@ button:disabled {
 }
 
 .screen {
+  width: 100%;
   min-height: 100vh;
-  padding: 40px 20px;
+  padding: 42px 20px;
+  animation: screenIn 0.28s ease;
 }
 
 .screen[hidden] {
@@ -77,17 +135,20 @@ button:disabled {
 }
 
 .narrow-container {
-  width: min(600px, 100%);
+  width: min(620px, 100%);
   margin: 0 auto;
 }
 
-.home-container {
-  min-height: calc(100vh - 80px);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
+@keyframes screenIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 
@@ -95,43 +156,86 @@ button:disabled {
    ACCUEIL
 ========================================================= */
 
+.home-container {
+  min-height: calc(100vh - 84px);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+}
+
 .game-logo {
-  width: 92px;
-  height: 92px;
-  border-radius: 50%;
+  width: 96px;
+  height: 96px;
+
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--card);
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle at 35% 30%,
+      #272d39,
+      var(--card)
+    );
+
   border: 1px solid var(--border);
-  font-size: 46px;
-  margin-bottom: 25px;
-  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.3);
+
+  font-size: 48px;
+
+  margin-bottom: 26px;
+
+  box-shadow:
+    0 20px 55px rgba(0, 0, 0, 0.4),
+    0 0 45px rgba(255, 116, 23, 0.08);
+
+  animation: logoFloat 4s ease-in-out infinite;
+}
+
+@keyframes logoFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-5px);
+  }
 }
 
 h1 {
   font-size: clamp(38px, 7vw, 70px);
-  line-height: 1;
-  letter-spacing: -2px;
-  margin-bottom: 15px;
+  line-height: 0.98;
+  letter-spacing: -2.5px;
+  margin-bottom: 16px;
 }
 
 .subtitle {
+  max-width: 620px;
+
   color: var(--muted);
+
   font-size: 18px;
-  max-width: 600px;
 }
 
 .home-actions {
-  width: min(420px, 100%);
+  width: min(430px, 100%);
+
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  margin-top: 35px;
+  gap: 11px;
+
+  margin-top: 34px;
 }
 
 .save-info {
-  margin-top: 18px;
+  margin-top: 17px;
+  font-size: 13px;
 }
 
 
@@ -140,12 +244,15 @@ h1 {
 ========================================================= */
 
 .screen-header {
-  margin-bottom: 35px;
+  margin-bottom: 34px;
 }
 
 .screen-header h2 {
   font-size: clamp(30px, 5vw, 48px);
-  line-height: 1.1;
+  line-height: 1.08;
+
+  letter-spacing: -1.2px;
+
   margin: 8px 0 10px;
 }
 
@@ -156,10 +263,14 @@ h1 {
 .step-label,
 .eyebrow {
   display: inline-block;
+
   color: var(--primary);
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 1.5px;
+
+  font-size: 11px;
+  font-weight: 900;
+
+  letter-spacing: 1.6px;
+
   text-transform: uppercase;
 }
 
@@ -169,42 +280,87 @@ h1 {
 ========================================================= */
 
 .form-group {
-  margin-bottom: 24px;
+  margin-bottom: 23px;
 }
 
 .form-group label,
 .form-group legend {
   display: block;
-  color: var(--text);
-  font-weight: 700;
+
   margin-bottom: 9px;
+
+  color: var(--text);
+
+  font-size: 14px;
+  font-weight: 800;
 }
 
-.form-group input {
+.form-group input,
+.form-group select,
+.form-group textarea {
   width: 100%;
-  height: 54px;
-  padding: 0 16px;
+
   color: var(--text);
   background: var(--card);
+
   border: 1px solid var(--border);
   border-radius: 12px;
+
   outline: none;
-  transition: 0.2s ease;
+
+  transition:
+    border var(--transition),
+    box-shadow var(--transition),
+    background var(--transition);
 }
 
-.form-group input::placeholder {
-  color: #626978;
+.form-group input,
+.form-group select {
+  height: 54px;
+  padding: 0 16px;
 }
 
-.form-group input:focus {
+.form-group select {
+  appearance: none;
+
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--muted) 50%),
+    linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+
+  background-position:
+    calc(100% - 19px) 23px,
+    calc(100% - 14px) 23px;
+
+  background-size:
+    5px 5px,
+    5px 5px;
+
+  background-repeat: no-repeat;
+
+  cursor: pointer;
+}
+
+.form-group input::placeholder,
+textarea::placeholder {
+  color: #606877;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+textarea:focus {
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(255, 122, 24, 0.12);
+
+  box-shadow:
+    0 0 0 3px rgba(255, 116, 23, 0.12);
 }
 
 .field-error {
   min-height: 20px;
+
   margin-top: 6px;
+
   color: var(--danger);
+
   font-size: 13px;
 }
 
@@ -215,14 +371,19 @@ h1 {
 
 .btn {
   min-height: 52px;
-  border: 0;
-  border-radius: 12px;
+
   padding: 0 22px;
-  font-weight: 800;
+
+  border-radius: 12px;
+  border: 1px solid transparent;
+
+  font-weight: 850;
+
   transition:
-    transform 0.15s ease,
-    background 0.15s ease,
-    opacity 0.15s ease;
+    transform var(--transition),
+    background var(--transition),
+    border var(--transition),
+    box-shadow var(--transition);
 }
 
 .btn:hover:not(:disabled) {
@@ -235,21 +396,41 @@ h1 {
 
 .btn-primary {
   color: #fff;
-  background: var(--primary);
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--primary),
+      #ff8a32
+    );
+
+  box-shadow:
+    0 8px 24px rgba(255, 116, 23, 0.16);
 }
 
 .btn-primary:hover:not(:disabled) {
-  background: var(--primary-hover);
+  background:
+    linear-gradient(
+      135deg,
+      var(--primary-hover),
+      #ffa15d
+    );
+
+  box-shadow:
+    0 10px 30px rgba(255, 116, 23, 0.23);
 }
 
 .btn-secondary {
   color: var(--text);
+
   background: var(--card);
-  border: 1px solid var(--border);
+
+  border-color: var(--border);
 }
 
 .btn-secondary:hover:not(:disabled) {
   background: var(--card-hover);
+  border-color: var(--border-light);
 }
 
 .btn-full {
@@ -273,52 +454,77 @@ h1 {
 
 .selection-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
   gap: 14px;
 }
 
 .region-card {
   position: relative;
-  min-height: 100px;
+
+  min-height: 105px;
+
   padding: 20px;
+
   display: flex;
   flex-direction: column;
   justify-content: center;
+
   text-align: left;
+
   background: var(--card);
+
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  transition: 0.2s ease;
+
   cursor: pointer;
+
+  transition:
+    transform var(--transition),
+    background var(--transition),
+    border var(--transition),
+    box-shadow var(--transition);
 }
 
 .region-card:hover {
   transform: translateY(-3px);
+
   background: var(--card-hover);
-  border-color: #3b4352;
+
+  border-color: var(--border-light);
 }
 
 .region-card.selected {
   border-color: var(--primary);
-  background: rgba(255, 122, 24, 0.08);
-  box-shadow: 0 0 0 1px var(--primary);
+
+  background: var(--primary-soft);
+
+  box-shadow:
+    0 0 0 1px var(--primary),
+    0 10px 30px rgba(255, 116, 23, 0.08);
 }
 
 .region-card input {
   position: absolute;
+
   opacity: 0;
+
   pointer-events: none;
 }
 
 .region-name {
-  font-weight: 800;
+  font-weight: 850;
   font-size: 16px;
 }
 
 .region-type {
+  margin-top: 4px;
+
   color: var(--muted);
+
   font-size: 12px;
-  margin-top: 3px;
 }
 
 
@@ -328,22 +534,62 @@ h1 {
 
 .club-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
   gap: 16px;
 }
 
 .club-card {
+  position: relative;
+
   padding: 22px;
-  background: var(--card);
+
+  overflow: hidden;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,0.015),
+      transparent
+    ),
+    var(--card);
+
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  transition: 0.2s ease;
+
+  transition:
+    transform var(--transition),
+    background var(--transition),
+    border var(--transition),
+    box-shadow var(--transition);
+}
+
+.club-card::before {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 3px;
+
+  background: var(--primary);
+
+  opacity: 0.55;
 }
 
 .club-card:hover {
-  transform: translateY(-3px);
+  transform: translateY(-4px);
+
   background: var(--card-hover);
-  border-color: #3b4352;
+
+  border-color: var(--border-light);
+
+  box-shadow: var(--shadow);
 }
 
 .club-card h3 {
@@ -353,19 +599,30 @@ h1 {
 
 .club-city {
   color: var(--muted);
+
   font-size: 14px;
-  margin-bottom: 16px;
+
+  margin-bottom: 15px;
 }
 
 .club-level {
   display: inline-flex;
+
   padding: 5px 9px;
+
   border-radius: 7px;
-  background: rgba(255, 122, 24, 0.1);
+
+  background: var(--primary-soft);
+
   color: var(--primary);
-  font-size: 11px;
-  font-weight: 800;
+
+  font-size: 10px;
+  font-weight: 900;
+
+  letter-spacing: 0.5px;
+
   text-transform: uppercase;
+
   margin-bottom: 18px;
 }
 
@@ -375,24 +632,34 @@ h1 {
 
 
 /* =========================================================
-   RÉSUMÉ CARRIÈRE
+   RÉSUMÉ
 ========================================================= */
 
 .career-summary {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  overflow: hidden;
   margin-bottom: 25px;
+
+  overflow: hidden;
+
+  background: var(--card);
+
+  border: 1px solid var(--border);
+
+  border-radius: var(--radius);
+
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.16);
 }
 
 .summary-row {
   min-height: 58px;
+
   padding: 14px 18px;
+
   display: flex;
   align-items: center;
   justify-content: space-between;
+
   gap: 20px;
+
   border-bottom: 1px solid var(--border);
 }
 
@@ -410,20 +677,28 @@ h1 {
 
 
 /* =========================================================
-   EN-TÊTE CARRIÈRE
+   HEADER CARRIÈRE
 ========================================================= */
 
 .career-header {
   display: flex;
+
   justify-content: space-between;
-  gap: 30px;
   align-items: flex-end;
-  margin-bottom: 30px;
+
+  gap: 30px;
+
+  margin-bottom: 25px;
 }
 
 .career-header h2 {
   font-size: clamp(30px, 5vw, 46px);
-  margin: 5px 0;
+
+  line-height: 1;
+
+  letter-spacing: -1.2px;
+
+  margin: 6px 0;
 }
 
 .career-header p {
@@ -437,18 +712,28 @@ h1 {
 
 .career-meta > div {
   min-width: 95px;
+
   padding: 13px 16px;
+
   background: var(--card);
+
   border: 1px solid var(--border);
+
   border-radius: 12px;
+
   text-align: center;
 }
 
 .career-meta span {
   display: block;
+
   color: var(--muted);
-  font-size: 11px;
+
+  font-size: 10px;
+  font-weight: 800;
+
   text-transform: uppercase;
+
   margin-bottom: 3px;
 }
 
@@ -458,20 +743,149 @@ h1 {
 
 
 /* =========================================================
-   PANNEAUX CARRIÈRE
+   DASHBOARD — JAUGES
+========================================================= */
+
+.career-dashboard {
+  margin-bottom: 16px;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 22px;
+}
+
+.dashboard-stat {
+  min-width: 0;
+}
+
+.dashboard-stat-header {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 9px;
+}
+
+.dashboard-stat-header span {
+  color: var(--muted);
+
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.dashboard-stat-header strong {
+  font-size: 15px;
+}
+
+.meter {
+  width: 100%;
+  height: 8px;
+
+  overflow: hidden;
+
+  background: #090b10;
+
+  border: 1px solid rgba(255,255,255,0.04);
+
+  border-radius: 999px;
+}
+
+.meter-fill {
+  height: 100%;
+
+  width: 0;
+
+  border-radius: inherit;
+
+  background:
+    linear-gradient(
+      90deg,
+      var(--primary),
+      #ffad69
+    );
+
+  box-shadow:
+    0 0 12px rgba(255, 116, 23, 0.22);
+
+  transition:
+    width 0.55s cubic-bezier(.2,.8,.2,1);
+}
+
+/* Couleurs selon les jauges */
+
+#morale-bar {
+  background:
+    linear-gradient(
+      90deg,
+      #8e5cff,
+      #c59eff
+    );
+}
+
+#forme-bar {
+  background:
+    linear-gradient(
+      90deg,
+      #1fd987,
+      #77efb4
+    );
+}
+
+#coach-bar {
+  background:
+    linear-gradient(
+      90deg,
+      #4c9cff,
+      #86c2ff
+    );
+}
+
+#popularity-bar {
+  background:
+    linear-gradient(
+      90deg,
+      #ff7417,
+      #ffc15d
+    );
+}
+
+
+/* =========================================================
+   PANNEAUX
 ========================================================= */
 
 .career-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
   gap: 16px;
 }
 
 .panel {
+  min-width: 0;
+
   padding: 22px;
-  background: var(--card);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,0.012),
+      transparent
+    ),
+    var(--card);
+
   border: 1px solid var(--border);
+
   border-radius: var(--radius);
+
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.10);
 }
 
 .panel-wide {
@@ -480,8 +894,11 @@ h1 {
 
 .panel-heading {
   display: flex;
+
   align-items: center;
+
   gap: 9px;
+
   margin-bottom: 18px;
 }
 
@@ -495,7 +912,7 @@ h1 {
 
 .panel > p:not(.muted) {
   font-size: 22px;
-  font-weight: 800;
+  font-weight: 850;
 }
 
 
@@ -506,14 +923,25 @@ h1 {
 .stat-list {
   display: flex;
   flex-direction: column;
-  gap: 11px;
+
+  gap: 10px;
 }
 
 .stat-row {
   display: flex;
+
   align-items: center;
   justify-content: space-between;
+
   gap: 15px;
+
+  padding: 7px 0;
+
+  border-bottom: 1px solid rgba(255,255,255,0.035);
+}
+
+.stat-row:last-child {
+  border-bottom: 0;
 }
 
 .stat-row span {
@@ -522,51 +950,173 @@ h1 {
 
 .stat-row strong {
   min-width: 35px;
+
   text-align: right;
+
+  font-size: 16px;
 }
 
 
 /* =========================================================
-   SITUATIONS
+   SITUATIONS / CHOIX
 ========================================================= */
 
 #situation-text {
-  font-size: 18px;
-  line-height: 1.7;
-  color: var(--text);
   margin-bottom: 22px;
+
+  color: var(--text);
+
+  font-size: 18px;
+
+  line-height: 1.75;
 }
 
 .choice-list {
   display: flex;
   flex-direction: column;
+
   gap: 10px;
 }
 
 .choice-btn {
+  position: relative;
+
   width: 100%;
+
   padding: 16px 18px;
+
   text-align: left;
+
   color: var(--text);
-  background: var(--bg-secondary);
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(255,116,23,0.025),
+      transparent
+    ),
+    var(--bg-secondary);
+
   border: 1px solid var(--border);
+
   border-radius: 12px;
-  transition: 0.2s ease;
+
+  transition:
+    transform var(--transition),
+    background var(--transition),
+    border var(--transition),
+    box-shadow var(--transition);
 }
 
 .choice-btn:hover {
+  transform: translateX(4px);
+
   background: var(--card-hover);
+
   border-color: var(--primary);
-  transform: translateX(3px);
+
+  box-shadow:
+    -3px 0 0 var(--primary);
 }
 
 .choice-btn strong {
   display: block;
-  margin-bottom: 3px;
+
+  margin-bottom: 4px;
+
+  font-size: 15px;
 }
 
 .choice-btn small {
+  display: block;
+
   color: var(--muted);
+
+  font-size: 12px;
+
+  line-height: 1.4;
+}
+
+
+/* =========================================================
+   HISTORIQUE
+========================================================= */
+
+.career-log {
+  max-height: 430px;
+
+  overflow-y: auto;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 10px;
+
+  padding-right: 4px;
+}
+
+.career-log::-webkit-scrollbar {
+  width: 5px;
+}
+
+.career-log::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.career-log::-webkit-scrollbar-thumb {
+  background: var(--border-light);
+  border-radius: 999px;
+}
+
+.log-entry {
+  padding: 13px 15px;
+
+  background: var(--bg-secondary);
+
+  border: 1px solid var(--border);
+
+  border-radius: 10px;
+}
+
+.log-entry strong {
+  display: block;
+
+  margin-bottom: 3px;
+}
+
+.log-entry p {
+  color: var(--muted);
+
+  font-size: 13px;
+}
+
+
+/* =========================================================
+   TROPHÉES
+========================================================= */
+
+#career-trophies-list {
+  margin: 12px 0 18px;
+
+  line-height: 1.7;
+}
+
+.trophy-item {
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  padding: 7px 0;
+
+  color: var(--text);
+
+  border-bottom: 1px solid rgba(255,255,255,0.035);
+}
+
+.trophy-item:last-child {
+  border-bottom: 0;
 }
 
 
@@ -576,35 +1126,51 @@ h1 {
 
 .progression-card {
   padding: 35px 25px;
+
   text-align: center;
+
   background: var(--card);
+
   border: 1px solid var(--border);
+
   border-radius: var(--radius);
+
   margin-bottom: 20px;
+
+  box-shadow: var(--shadow);
 }
 
 .progression-card > p:first-child {
   color: var(--muted);
+
   margin-bottom: 20px;
 }
 
 .overall-change {
   display: flex;
+
   justify-content: center;
   align-items: center;
+
   gap: 18px;
-  font-size: 28px;
+
   color: var(--muted);
+
+  font-size: 28px;
 }
 
 .overall-change strong {
   color: var(--success);
+
   font-size: 48px;
+
+  line-height: 1;
 }
 
 .overall-change-label {
-  margin-top: 6px;
-  font-weight: 800;
+  margin-top: 8px;
+
+  font-weight: 850;
 }
 
 .positive {
@@ -613,22 +1179,107 @@ h1 {
 
 .stat-change-list {
   margin-top: 25px;
+
   display: flex;
   flex-direction: column;
+
   gap: 9px;
+
   text-align: left;
 }
 
 .stat-change {
   display: flex;
+
   justify-content: space-between;
+
   padding: 11px 13px;
-  border-radius: 9px;
+
   background: var(--bg-secondary);
+
+  border: 1px solid var(--border);
+
+  border-radius: 9px;
 }
 
 .stat-change strong {
   color: var(--success);
+}
+
+.stat-change.negative strong {
+  color: var(--danger);
+}
+
+
+/* =========================================================
+   FIN DE CARRIÈRE
+========================================================= */
+
+#screen-end .game-logo {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#screen-end .screen-header {
+  text-align: center;
+}
+
+#screen-end .career-summary {
+  margin-bottom: 20px;
+}
+
+.career-story {
+  color: #d8dce5;
+
+  font-size: 16px;
+
+  line-height: 1.85;
+}
+
+.career-story p {
+  margin-bottom: 14px;
+}
+
+.career-story p:last-child {
+  margin-bottom: 0;
+}
+
+
+/* =========================================================
+   PARTAGE
+========================================================= */
+
+#share-text {
+  width: 100%;
+
+  min-height: 210px;
+
+  resize: vertical;
+
+  padding: 15px;
+
+  color: var(--text);
+
+  background: var(--bg-secondary);
+
+  border: 1px solid var(--border);
+
+  border-radius: 12px;
+
+  outline: none;
+
+  line-height: 1.6;
+
+  margin-top: 15px;
+
+  margin-bottom: 5px;
+}
+
+#share-text:focus {
+  border-color: var(--primary);
+
+  box-shadow:
+    0 0 0 3px rgba(255,116,23,0.1);
 }
 
 
@@ -642,29 +1293,60 @@ h1 {
 
 .toast {
   position: fixed;
+
   left: 50%;
   bottom: 25px;
+
+  z-index: 1000;
+
   transform: translateX(-50%);
-  z-index: 100;
+
+  width: max-content;
   max-width: calc(100% - 30px);
+
   padding: 12px 18px;
+
+  color: var(--text);
+
+  background: #191e28;
+
   border: 1px solid var(--border);
-  border-radius: 10px;
-  background: #191d26;
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.35);
+
+  border-radius: 11px;
+
+  box-shadow:
+    0 15px 40px rgba(0,0,0,0.4);
+
   font-size: 14px;
+
+  animation: toastIn 0.2s ease;
+}
+
+@keyframes toastIn {
+  from {
+    opacity: 0;
+    transform:
+      translate(-50%, 10px);
+  }
+
+  to {
+    opacity: 1;
+    transform:
+      translate(-50%, 0);
+  }
 }
 
 
 /* =========================================================
-   RESPONSIVE TABLETTE
+   TABLETTE
 ========================================================= */
 
-@media (max-width: 850px) {
+@media (max-width: 900px) {
 
   .selection-grid,
   .club-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
   }
 
   .career-grid {
@@ -678,112 +1360,35 @@ h1 {
 
 
 /* =========================================================
-   RESPONSIVE MOBILE
+   MOBILE
 ========================================================= */
 
 @media (max-width: 600px) {
 
   .screen {
-    padding: 25px 15px;
+    padding: 25px 14px;
   }
 
   .home-container {
     min-height: calc(100vh - 50px);
   }
 
+  .game-logo {
+    width: 82px;
+    height: 82px;
+
+    font-size: 40px;
+
+    margin-bottom: 22px;
+  }
+
   h1 {
-    letter-spacing: -1px;
+    font-size: 42px;
+    letter-spacing: -1.7px;
   }
 
   .subtitle {
     font-size: 15px;
   }
 
-  .screen-header {
-    margin-bottom: 25px;
-  }
-
-  .screen-header h2 {
-    font-size: 30px;
-  }
-
-  .selection-grid,
-  .club-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .form-actions {
-    flex-direction: column-reverse;
-  }
-
-  .form-actions .btn {
-    width: 100%;
-  }
-
-  .career-header {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 18px;
-  }
-
-  .career-meta {
-    width: 100%;
-  }
-
-  .career-meta > div {
-    flex: 1;
-  }
-
-  .career-header h2 {
-    font-size: 32px;
-  }
-
-  .panel {
-    padding: 18px;
-  }
-
-  .progression-card {
-    padding: 28px 18px;
-  }
-
-  .overall-change strong {
-    font-size: 42px;
-  }
-
-  .summary-row {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 3px;
-  }
-
-  .summary-row strong {
-    text-align: left;
-  }
-}
-
-
-/* =========================================================
-   PETITS ÉCRANS
-========================================================= */
-
-@media (max-width: 380px) {
-
-  .game-logo {
-    width: 75px;
-    height: 75px;
-    font-size: 37px;
-  }
-
-  .career-meta > div {
-    min-width: 0;
-    padding: 11px 8px;
-  }
-
-  .career-meta strong {
-    font-size: 21px;
-  }
-
-  .btn {
-    min-height: 48px;
-  }
-  }
+  .screen-header
