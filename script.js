@@ -1,1240 +1,488 @@
 "use strict";
+document.addEventListener("DOMContentLoaded",()=>{
 
-document.addEventListener("DOMContentLoaded", () => {
+const $=id=>document.getElementById(id);
+const rnd=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const cap=n=>Math.max(0,Math.min(100,n));
+const KEY="basketball_journey_save_v5";
 
-  const SAVE_KEY = "basketball_journey_save_v4";
+let game=null,style="scoreur";
 
-  let game = null;
-  let selectedStyle = "scoreur";
+const ST={
+ scoreur:["Scoreur",10,2,1,3,3],
+ createur:["Créateur",4,10,2,2,4],
+ defenseur:["Défenseur",2,3,11,6,4],
+ interieur:["Intérieur",3,2,8,11,3]
+};
 
-  const $ = id => document.getElementById(id);
+const CLUBS={
+ 1:["Cholet Basket","JL Bourg","Le Mans","Dijon","Strasbourg","Nanterre 92","Limoges CSP"],
+ 2:["ASVEL","Paris Basketball","Monaco","Valencia Basket","Virtus Bologna","Fenerbahçe","Partizan"],
+ 3:["Real Madrid","FC Barcelona","Olympiacos","Panathinaïkos","Maccabi Tel Aviv"],
+ 4:["Boston Celtics","Los Angeles Lakers","Golden State Warriors","Denver Nuggets","Milwaukee Bucks","New York Knicks"]
+};
 
-  const clamp = (n, min = 0, max = 100) =>
-    Math.max(min, Math.min(max, n));
+const EVENTS=[
+["ENTRAÎNEMENT","Le coach te demande plus.",[
+["🔥 Travailler énormément",{form:5,morale:2,shoot:2,mental:2},"Tu fais une séance supplémentaire."],
+["⚖️ Travailler intelligemment",{form:3,morale:4,mental:3},"Tu privilégies la qualité."],
+["😴 Ne rien faire",{form:-7,morale:-3,mental:-3},"Le coach remarque ton manque d'implication."]
+]],
+["VESTIAIRE","Un jeune coéquipier doute.",[
+["🤝 Le soutenir",{morale:5,reputation:3,pass:2},"Tu prends le temps de l'aider."],
+["🏀 T'entraîner avec lui",{form:3,pass:3,morale:3},"Vous progressez ensemble."],
+["🚶 L'ignorer",{morale:-5,reputation:-2},"Tu restes concentré sur toi."]
+]],
+["MÉDIAS","Un journaliste te demande si tu peux devenir une star.",[
+["⭐ Assumer tes ambitions",{reputation:5,popularity:6,morale:3,mental:2},"Tu annonces vouloir atteindre le sommet."],
+["🤝 Mettre l'équipe en avant",{reputation:3,morale:4,pass:2},"Ton humilité plaît au vestiaire."],
+["💢 Critiquer le coach",{reputation:-6,morale:-5,mental:-3},"Tes propos provoquent une polémique."]
+]],
+["DISCIPLINE","Tes amis veulent sortir avant un gros match.",[
+["🏠 Rentrer tôt",{form:6,mental:3},"Tu fais passer le basket avant la fête."],
+["🎉 Faire la fête",{morale:6,form:-9,mental:-2},"Tu arrives fatigué au match."]
+]],
+["AGENT","Ton agent t'appelle : des clubs te suivent.",[
+["💼 Écouter le marché",{reputation:3,morale:2},"Ton agent étudie les possibilités."],
+["❤️ Rester fidèle",{morale:6,mental:2},"Tu confirmes ton attachement au club."]
+]],
+["RÉSEAUX","Une vidéo de tes actions devient virale.",[
+["📱 Profiter de la popularité",{popularity:10,reputation:4,morale:3},"Ta popularité augmente fortement."],
+["🏀 Ignorer les réseaux",{popularity:1,mental:5,form:3},"Tu restes concentré sur le terrain."]
+]]
+];
 
-  const random = (min, max) =>
-    Math.floor(Math.random() * (max - min + 1)) + min;
+function screen(id){
+ document.querySelectorAll(".screen").forEach(x=>x.classList.remove("active"));
+ const e=$(id);if(e)e.classList.add("active");
+}
 
-  const pick = arr =>
-    arr[Math.floor(Math.random() * arr.length)];
+function toast(t){
+ const e=$("toast");if(!e)return;
+ e.textContent=t;e.classList.add("show");
+ clearTimeout(e._t);
+ e._t=setTimeout(()=>e.classList.remove("show"),2200);
+}
 
+function save(){
+ if(!game)return;
+ try{localStorage.setItem(KEY,JSON.stringify(game));}catch(e){}
+}
 
-  /* ========================================================
-     CLUBS
-  ======================================================== */
+function load(){
+ try{
+  const x=localStorage.getItem(KEY);
+  if(!x)return false;
+  game=JSON.parse(x);return true;
+ }catch(e){return false}
+}
 
-  const CLUBS = {
+function add(text){
+ if(!game.history)game.history=[];
+ game.history.unshift(text);
+ if(game.history.length>80)game.history.pop();
+}
 
-    1: [
-      "Cholet Basket",
-      "JL Bourg",
-      "Le Mans",
-      "Dijon",
-      "Strasbourg",
-      "Nanterre 92",
-      "Limoges CSP"
-    ],
+function overall(){
+ let s=game.skills;
+ return Math.max(40,Math.min(99,Math.round(
+  38+s.shoot*.22+s.pass*.17+s.defense*.22+s.phys*.21+s.mental*.18
+ )));
+}
 
-    2: [
-      "ASVEL",
-      "Paris Basketball",
-      "Monaco",
-      "Valencia Basket",
-      "Virtus Bologna",
-      "Fenerbahçe",
-      "Partizan"
-    ],
+function club(level){
+ return pick(CLUBS[Math.min(level,4)]);
+}
 
-    3: [
-      "Real Madrid",
-      "FC Barcelona",
-      "Olympiacos",
-      "Panathinaïkos",
-      "Fenerbahçe",
-      "Maccabi Tel Aviv"
-    ],
+function create(){
+ let s=ST[style];
 
-    4: [
-      "Boston Celtics",
-      "Los Angeles Lakers",
-      "Golden State Warriors",
-      "Denver Nuggets",
-      "Milwaukee Bucks",
-      "New York Knicks"
-    ]
+ game={
+  first:$("firstName").value.trim()||"Alex",
+  last:$("lastName").value.trim()||"Martin",
+  age:Number($("age").value)||18,
+  position:$("position").value||"Meneur",
+  height:$("height").value||"1m88",
+  country:$("country").value.trim()||"France",
+  style:s[0],styleKey:style,
+  season:1,year:2026,match:0,
+  club:club(1),clubLevel:1,salary:900,
+  form:82,morale:72,reputation:8,popularity:3,
+  injured:false,injuryMatches:0,nationalTeam:false,nationalCaps:0,
+  skills:{shoot:45+s[1],pass:45+s[2],defense:45+s[3],phys:45+s[4],mental:45+s[5]},
+  stats:{games:0,points:0,rebounds:0,assists:0,steals:0,blocks:0,wins:0,losses:0},
+  trophies:[],history:[],clubs:[],seasons:[],retired:false
+ };
 
+ game.clubs.push(game.club);
+ add("🌱 Débuts professionnels avec "+game.club+".");
+ add("🏀 Premier contrat professionnel signé.");
+ save();screen("screen-career");update();event();
+ toast("🏀 Bienvenue chez "+game.club+" !");
+}
+
+function update(){
+ if(!game)return;
+
+ $("seasonLabel").textContent="Saison "+game.season+" • "+game.year;
+ $("clubPill").textContent=game.club.toUpperCase();
+ $("playerName").textContent=game.first+" "+game.last;
+ $("playerMeta").textContent=game.age+" ans • "+game.position+" • "+game.height+" • "+game.country+" • "+game.style;
+ $("overall").textContent=overall();
+ $("form").textContent=game.form;
+ $("morale").textContent=game.morale;
+ $("reputation").textContent=game.reputation;
+ $("salary").textContent=game.salary.toLocaleString("fr-FR")+" €";
+
+ $("formBar").style.width=game.form+"%";
+ $("moraleBar").style.width=game.morale+"%";
+ $("repBar").style.width=game.reputation+"%";
+
+ $("games").textContent=game.stats.games;
+ $("points").textContent=game.stats.points;
+ $("rebounds").textContent=game.stats.rebounds;
+ $("assists").textContent=game.stats.assists;
+ $("steals").textContent=game.stats.steals;
+ $("blocks").textContent=game.stats.blocks;
+
+ $("seasonProgress").textContent=(game.match+1)+"/10";
+ $("progressText").textContent="S"+game.season;
+ $("nextMatch").textContent="Match "+(game.match+1)+" — "+game.club;
+
+ $("matchInfo").textContent=game.injured
+ ? "🩹 Blessé — encore "+game.injuryMatches+" match(s) d'absence."
+ : "Prends ta place sur le parquet et fais la différence.";
+
+ $("history").innerHTML=game.history.length
+ ? game.history.map(x=>"<div>"+x+"</div>").join("")
+ : "Début de carrière...";
+
+ $("trophies").innerHTML=game.trophies.length
+ ? game.trophies.map(x=>"🏆 "+x).join("<br>")
+ : "Aucun trophée";
+}
+
+function event(){
+ if(!game||game.retired)return;
+
+ let e=pick(EVENTS);
+ $("eventTag").textContent=e[0];
+ $("eventTitle").textContent=e[1];
+ $("eventText").textContent="Choisis ta réaction.";
+
+ $("choices").innerHTML=e[2].map((c,i)=>
+  '<button class="choice" data-i="'+i+'" type="button">'+c[0]+"</button>"
+ ).join("");
+
+ document.querySelectorAll(".choice").forEach(b=>{
+  b.onclick=()=>{
+   let c=e[2][Number(b.dataset.i)];
+   apply(c[1]);add("🧠 "+c[2]);save();update();toast("🧠 Ton choix a des conséquences");
   };
+ });
+}
+
+function apply(e){
+ Object.keys(e).forEach(k=>{
+  if(["shoot","pass","defense","phys","mental"].includes(k))
+   game.skills[k]=Math.max(1,Math.min(99,game.skills[k]+e[k]));
+  else if(["form","morale","reputation","popularity"].includes(k))
+   game[k]=cap(game[k]+e[k]);
+ });
+}
+
+function match(){
+ if(!game)return;
+
+ if(game.injured){
+  toast("🩹 Tu ne peux pas jouer blessé.");
+  return;
+ }
+
+ let r=overall();
+ let performance=r+rnd(-12,12)+(game.form-70)*.2+(game.morale-60)*.12;
+ let win=performance>=rnd(58,94);
+
+ let pts=Math.max(2,Math.round(r/5+rnd(-3,9)));
+ let reb=Math.max(0,Math.round(game.skills.phys/15+rnd(0,4)));
+ let ast=Math.max(0,Math.round(game.skills.pass/16+rnd(0,3)));
+ let st=Math.max(0,Math.round(game.skills.defense/32+rnd(0,1)));
+ let bl=game.position==="Pivot"?rnd(0,3):rnd(0,1);
+
+ game.stats.games++;
+ game.stats.points+=pts;
+ game.stats.rebounds+=reb;
+ game.stats.assists+=ast;
+ game.stats.steals+=st;
+ game.stats.blocks+=bl;
+
+ if(win){
+  game.stats.wins++;
+  game.morale=cap(game.morale+rnd(2,6));
+  game.form=cap(game.form+rnd(1,4));
+  game.reputation=cap(game.reputation+rnd(1,3));
+ }else{
+  game.stats.losses++;
+  game.morale=cap(game.morale-rnd(1,5));
+  game.form=cap(game.form-rnd(1,5));
+ }
+
+ add((win?"🟢 Victoire":"🔴 Défaite")+" — "+pts+" pts, "+reb+" reb, "+ast+" ast.");
+
+ if(Math.random()<(game.form<35?.14:.035)){
+  game.injured=true;
+  game.injuryMatches=rnd(1,3);
+  add("🩹 Blessure : "+game.injuryMatches+" match(s) d'absence.");
+ }
+
+ game.match++;
+ save();
+
+ toast((win?"🏆 Victoire":"💥 Défaite")+" — "+pts+" points");
+
+ if(game.match>=10)season();
+ else{update();setTimeout(event,300);}
+}
+
+function trophy(x){
+ if(!game.trophies.includes(x)){
+  game.trophies.push(x);
+  add("🏆 "+x);
+ }
+}
+
+function season(){
+ let g=Math.max(1,game.stats.games);
+ let avg=game.stats.points/g;
+ let wins=game.stats.wins;
+ let r=overall();
+
+ if(wins>=7&&Math.random()<.75)trophy("Champion — Saison "+game.season);
+ if(avg>=20&&r>=78)trophy("Meilleur scoreur — Saison "+game.season);
+ if(game.stats.assists/g>=6&&game.skills.pass>=75)trophy("Meilleur passeur — Saison "+game.season);
+ if(r>=88&&avg>=18)trophy("MVP — Saison "+game.season);
+
+ game.seasons.push({
+  season:game.season,year:game.year,club:game.club,
+  overall:r,average:Number(avg.toFixed(1)),wins:wins
+ });
+
+ add("📅 Saison "+game.season+" terminée — "+avg.toFixed(1)+" points/match.");
+
+ game.season++;
+ game.year++;
+ game.age++;
+ game.match=0;
+
+ ["shoot","pass","defense","phys","mental"].forEach(k=>{
+  game.skills[k]=Math.min(99,game.skills[k]+rnd(1,4));
+ });
+
+ game.form=cap(game.form+rnd(4,10));
+ game.morale=cap(game.morale+rnd(3,8));
+ game.salary=Math.round(game.salary*(1.08+rnd(0,15)/100));
+
+ game.injured=false;
+ game.injuryMatches=0;
+
+ if(overall()>=76&&!game.nationalTeam){
+  game.nationalTeam=true;
+  game.nationalCaps=rnd(2,5);
+  add("🇫🇷 Première sélection en équipe nationale !");
+ }else if(game.nationalTeam){
+  game.nationalCaps+=rnd(2,7);
+ }
+
+ transfer();
+
+ if(game.age>=35){
+  retire();
+  return;
+ }
+
+ save();update();event();
+ toast("📅 Nouvelle saison !");
+}
+
+function transfer(){
+ let r=overall(),chance=.1;
+ if(r>=70)chance+=.15;
+ if(r>=78)chance+=.2;
+ if(r>=85)chance+=.25;
+ if(game.reputation>=60)chance+=.15;
+
+ if(Math.random()>chance){
+  add("✍️ Tu restes à "+game.club+".");
+  return;
+ }
+
+ let level=game.clubLevel;
+ if(r>=72)level=Math.max(level,2);
+ if(r>=80)level=Math.max(level,3);
+ if(r>=88)level=Math.max(level,4);
+
+ let old=game.club,n=club(level);
+ if(n===old)return;
 
+ game.club=n;
+ game.clubLevel=level;
+ game.salary=Math.round(game.salary*(1.3+rnd(0,90)/100));
 
-  /* ========================================================
-     STYLES
-  ======================================================== */
+ if(!game.clubs.includes(n))game.clubs.push(n);
 
-  const STYLES = {
+ game.reputation=cap(game.reputation+4);
+ game.morale=cap(game.morale+5);
 
-    scoreur: {
-      name: "Scoreur",
-      shoot: 10,
-      pass: 2,
-      defense: 1,
-      phys: 3,
-      mental: 3
-    },
+ add("🔄 TRANSFERT — "+old+" → "+n+".");
+}
 
-    createur: {
-      name: "Créateur",
-      shoot: 4,
-      pass: 10,
-      defense: 2,
-      phys: 2,
-      mental: 4
-    },
-
-    defenseur: {
-      name: "Défenseur",
-      shoot: 2,
-      pass: 3,
-      defense: 11,
-      phys: 6,
-      mental: 4
-    },
-
-    interieur: {
-      name: "Intérieur",
-      shoot: 3,
-      pass: 2,
-      defense: 8,
-      phys: 11,
-      mental: 3
-    }
-
-  };
-
-
-  /* ========================================================
-     AFFICHAGE
-  ======================================================== */
-
-  function showScreen(id) {
-
-    document
-      .querySelectorAll(".screen")
-      .forEach(screen => {
-        screen.classList.remove("active");
-      });
-
-    const screen = $(id);
-
-    if (screen) {
-      screen.classList.add("active");
-    }
-  }
-
-
-  /* ========================================================
-     NOTIFICATION
-  ======================================================== */
-
-  function notify(text) {
-
-    const toast = $("toast");
-
-    if (!toast) return;
-
-    toast.textContent = text;
-    toast.classList.add("show");
-
-    clearTimeout(toast.timer);
-
-    toast.timer = setTimeout(() => {
-      toast.classList.remove("show");
-    }, 2200);
-  }
-
-
-  /* ========================================================
-     SAUVEGARDE
-  ======================================================== */
-
-  function saveGame(show = true) {
-
-    if (!game) return;
-
-    try {
-
-      localStorage.setItem(
-        SAVE_KEY,
-        JSON.stringify(game)
-      );
-
-      if (show) {
-        notify("💾 Carrière sauvegardée");
-      }
-
-    } catch (error) {
-
-      console.error(error);
-      notify("Impossible de sauvegarder");
-
-    }
-  }
-
-
-  function loadGame() {
-
-    try {
-
-      const data =
-        localStorage.getItem(SAVE_KEY);
-
-      if (!data) return false;
-
-      game = JSON.parse(data);
-
-      return true;
-
-    } catch (error) {
-
-      console.error(error);
-
-      localStorage.removeItem(SAVE_KEY);
-
-      return false;
-    }
-  }
-
-
-  /* ========================================================
-     HISTORIQUE
-  ======================================================== */
-
-  function addHistory(text) {
-
-    if (!game.history) {
-      game.history = [];
-    }
-
-    game.history.unshift(text);
-
-    if (game.history.length > 80) {
-      game.history.pop();
-    }
-  }
-
-
-  /* ========================================================
-     NOTE
-  ======================================================== */
-
-  function overall() {
-
-    const s = game.skills;
-
-    return clamp(
-      Math.round(
-        38 +
-        s.shoot * .22 +
-        s.pass * .17 +
-        s.defense * .22 +
-        s.phys * .21 +
-        s.mental * .18
-      ),
-      40,
-      99
-    );
-  }
-
-
-  /* ========================================================
-     CLUB
-  ======================================================== */
-
-  function getClub(level) {
-
-    const list =
-      CLUBS[Math.min(level, 4)];
-
-    return pick(list);
-  }
-
-
-  /* ========================================================
-     CREATION DU JOUEUR
-  ======================================================== */
-
-  function createPlayer() {
-
-    const first =
-      $("firstName").value.trim() || "Alex";
-
-    const last =
-      $("lastName").value.trim() || "Martin";
-
-    const age =
-      Number($("age").value) || 18;
-
-    const position =
-      $("position").value || "Meneur";
-
-    const height =
-      $("height").value || "1m88";
-
-    const country =
-      $("country").value.trim() || "France";
-
-    const style =
-      STYLES[selectedStyle];
-
-
-    game = {
-
-      first,
-      last,
-      age,
-      position,
-      height,
-      country,
-
-      style: style.name,
-      styleKey: selectedStyle,
-
-      season: 1,
-      year: 2026,
-      match: 0,
-
-      club: getClub(1),
-      clubLevel: 1,
-
-      salary: 900,
-
-      form: 82,
-      morale: 72,
-      reputation: 8,
-      popularity: 3,
-
-      injured: false,
-      injuryMatches: 0,
-
-      nationalTeam: false,
-      nationalCaps: 0,
-
-      skills: {
-
-        shoot: 45 + style.shoot,
-        pass: 45 + style.pass,
-        defense: 45 + style.defense,
-        phys: 45 + style.phys,
-        mental: 45 + style.mental
-
-      },
-
-      stats: {
-
-        games: 0,
-        points: 0,
-        rebounds: 0,
-        assists: 0,
-        steals: 0,
-        blocks: 0,
-
-        wins: 0,
-        losses: 0
-
-      },
-
-      trophies: [],
-      history: [],
-      clubs: [],
-      seasons: [],
-
-      retired: false
-
-    };
-
-
-    game.clubs.push(game.club);
-
-
-    addHistory(
-      `🌱 Débuts professionnels avec ${game.club}.`
-    );
-
-    addHistory(
-      `🏀 Premier contrat professionnel signé.`
-    );
-
-
-    saveGame(false);
-
-    showScreen("screen-career");
-
-    updateUI();
-
-    generateEvent();
-
-    notify(
-      `🏀 Bienvenue chez ${game.club} !`
-    );
-  }
-
-
-  /* ========================================================
-     INTERFACE
-  ======================================================== */
-
-  function updateUI() {
-
-    if (!game) return;
-
-
-    $("seasonLabel").textContent =
-      `Saison ${game.season} • ${game.year}`;
-
-
-    $("clubPill").textContent =
-      game.club.toUpperCase();
-
-
-    $("playerName").textContent =
-      `${game.first} ${game.last}`;
-
-
-    $("playerMeta").textContent =
-      `${game.age} ans • ${game.position} • ` +
-      `${game.height} • ${game.country} • ` +
-      `${game.style}`;
-
-
-    $("overall").textContent =
-      overall();
-
-
-    $("form").textContent =
-      game.form;
-
-    $("morale").textContent =
-      game.morale;
-
-    $("reputation").textContent =
-      game.reputation;
-
-
-    $("salary").textContent =
-      game.salary.toLocaleString("fr-FR") + " €";
-
-
-    $("formBar").style.width =
-      game.form + "%";
-
-    $("moraleBar").style.width =
-      game.morale + "%";
-
-    $("repBar").style.width =
-      game.reputation + "%";
-
-
-    $("games").textContent =
-      game.stats.games;
-
-    $("points").textContent =
-      game.stats.points;
-
-    $("rebounds").textContent =
-      game.stats.rebounds;
-
-    $("assists").textContent =
-      game.stats.assists;
-
-    $("steals").textContent =
-      game.stats.steals;
-
-    $("blocks").textContent =
-      game.stats.blocks;
-
-
-    $("seasonProgress").textContent =
-      `${game.match + 1}/10`;
-
-    $("progressText").textContent =
-      `S${game.season}`;
-
-
-    $("nextMatch").textContent =
-      `Match ${game.match + 1} — ${game.club}`;
-
-
-    if (game.injured) {
-
-      $("matchInfo").textContent =
-        `🩹 Blessé — encore ` +
-        `${game.injuryMatches} match(s) d'absence.`;
-
-    } else {
-
-      $("matchInfo").textContent =
-        "Prends ta place sur le parquet et fais la différence.";
-
-    }
-
-
-    renderHistory();
-    renderTrophies();
-  }
-
-
-  /* ========================================================
-     HISTORIQUE
-  ======================================================== */
-
-  function renderHistory() {
-
-    const element = $("history");
-
-    if (!element) return;
-
-    if (!game.history.length) {
-
-      element.textContent =
-        "Début de carrière...";
-
-      return;
-    }
-
-
-    element.innerHTML =
-      game.history
-        .map(item =>
-          `<div>${item}</div>`
-        )
-        .join("");
-  }
-
-
-  /* ========================================================
-     TROPHÉES
-  ======================================================== */
-
-  function renderTrophies() {
-
-    const element =
-      $("trophies");
-
-    if (!element) return;
-
-
-    if (!game.trophies.length) {
-
-      element.textContent =
-        "Aucun trophée";
-
-      return;
-    }
-
-
-    element.innerHTML =
-      game.trophies
-        .map(t =>
-          `🏆 ${t}`
-        )
-        .join("<br>");
-  }
-
-
-  function addTrophy(name) {
-
-    if (!game.trophies.includes(name)) {
-
-      game.trophies.push(name);
-
-      addHistory(
-        `🏆 ${name}`
-      );
-
-    }
-  }
-
-
-  /* ========================================================
-     EVENEMENTS
-  ======================================================== */
-
-  const EVENTS = [
-
-    {
-      tag: "ENTRAÎNEMENT",
-
-      title: "Le coach te demande plus",
-
-      text:
-        "Tu dois choisir comment préparer le prochain match.",
-
-      choices: [
-
-        {
-          text: "🔥 Travailler énormément",
-
-          effects: {
-            form: 5,
-            morale: 2,
-            shoot: 2,
-            mental: 2,
-
-            story:
-              "Tu fais une séance supplémentaire."
-          }
-        },
-
-        {
-          text: "⚖️ Travailler intelligemment",
-
-          effects: {
-            form: 3,
-            morale: 4,
-            mental: 3,
-
-            story:
-              "Tu privilégies la qualité à la quantité."
-          }
-        },
-
-        {
-          text: "😴 Ne pas faire d'effort",
-
-          effects: {
-            form: -7,
-            morale: -3,
-            mental: -3,
-
-            story:
-              "Le coach remarque ton manque d'implication."
-          }
-        }
-
-      ]
-    },
-
-
-    {
-      tag: "VESTIAIRE",
-
-      title: "Un coéquipier doute",
-
-      text:
-        "Un jeune joueur vient te demander conseil.",
-
-      choices: [
-
-        {
-          text: "🤝 Le soutenir",
-
-          effects: {
-            morale: 5,
-            reputation: 3,
-            pass: 2,
-
-            story:
-              "Tu prends le temps de l'aider."
-          }
-        },
-
-        {
-          text: "🏀 T'entraîner avec lui",
-
-          effects: {
-            form: 3,
-            pass: 3,
-            morale: 3,
-
-            story:
-              "Vous progressez ensemble."
-          }
-        },
-
-        {
-          text: "🚶 L'ignorer",
-
-          effects: {
-            morale: -5,
-            reputation: -2,
-
-            story:
-              "Tu préfères rester concentré sur toi."
-          }
-        }
-
-      ]
-    },
-
-
-    {
-      tag: "MÉDIAS",
-
-      title: "Une interview après ton match",
-
-      text:
-        "Un journaliste te demande si tu peux devenir une star.",
-
-      choices: [
-
-        {
-          text: "⭐ Assumer tes ambitions",
-
-          effects: {
-            reputation: 5,
-            popularity: 6,
-            morale: 3,
-            mental: 2,
-
-            story:
-              "Tu annonces vouloir atteindre le sommet."
-          }
-        },
-
-        {
-          text: "🤝 Mettre l'équipe en avant",
-
-          effects: {
-            reputation: 3,
-            morale: 4,
-            pass: 2,
-
-            story:
-              "Ton humilité plaît au vestiaire."
-          }
-        },
-
-        {
-          text: "💢 Critiquer ton coach",
-
-          effects: {
-            reputation: -6,
-            morale: -5,
-            mental: -3,
-
-            story:
-              "Tes propos provoquent une polémique."
-          }
-        }
-
-      ]
-    },
-
-
-    {
-      tag: "DISCIPLINE",
-
-      title: "Une soirée avant un gros match",
-
-      text:
-        "Tes amis veulent sortir la veille d'une rencontre importante.",
-
-      choices: [
-
-        {
-          text: "🏠 Rentrer tôt",
-
-          effects: {
-            form: 6,
-            mental: 3,
-
-            story:
-              "Tu fais passer le basket avant la fête."
-          }
-        },
-
-        {
-          text: "🎉 Faire la fête",
-
-          effects: {
-            morale: 6,
-            form: -9,
-            mental: -2,
-
-            story:
-              "Tu profites de la soirée mais arrives fatigué."
-          }
-        }
-
-      ]
-    },
-
-
-    {
-      tag: "AGENT",
-
-      title: "Ton agent t'appelle",
-
-      text:
-        "Plusieurs clubs commencent à suivre tes performances.",
-
-      choices: [
-
-        {
-          text: "💼 Écouter le marché",
-
-          effects: {
-            reputation: 3,
-            morale: 2,
-
-            story:
-              "Ton agent commence à étudier les possibilités."
-          }
-        },
-
-        {
-          text: "❤️ Rester fidèle",
-
-          effects: {
-            morale: 6,
-            mental: 2,
-
-            story:
-              "Tu confirmes ton attachement à ton club."
-          }
-        }
-
-      ]
-    },
-
-
-    {
-      tag: "RÉSEAUX",
-
-      title: "Ta vidéo devient virale",
-
-      text:
-        "Tes meilleures actions font le tour des réseaux sociaux.",
-
-      choices: [
-
-        {
-          text: "📱 Profiter de la popularité",
-
-          effects: {
-            popularity: 10,
-            reputation: 4,
-            morale: 3,
-
-            story:
-              "Ta popularité augmente fortement."
-          }
-        },
-
-        {
-          text: "🏀 Ignorer les réseaux",
-
-          effects: {
-            popularity: 1,
-            mental: 5,
-            form: 3,
-
-            story:
-              "Tu préfères rester concentré sur le terrain."
-          }
-        }
-
-      ]
-    }
-
-  ];
-
-
-  /* ========================================================
-     GENERER EVENEMENT
-  ======================================================== */
-
-  function generateEvent() {
-
-    if (!game || game.retired) return;
-
-
-    const event =
-      pick(EVENTS);
-
-
-    $("eventTag").textContent =
-      event.tag;
-
-    $("eventTitle").textContent =
-      event.title;
-
-    $("eventText").textContent =
-      event.text;
-
-
-    $("choices").innerHTML =
-      event.choices
-        .map((choice, index) => {
-
-          return `
-            <button
-              class="choice"
-              data-choice="${index}">
-              ${choice.text}
-            </button>
-          `;
-
-        })
-        .join("");
-
-
-    document
-      .querySelectorAll(".choice")
-      .forEach(button => {
-
-        button.addEventListener(
-          "click",
-          () => {
-
-            const index =
-              Number(button.dataset.choice);
-
-            applyChoice(
-              event.choices[index]
-            );
-
-          }
-        );
-
-      });
-  }
-
-
-  /* ========================================================
-     CHOIX
-  ======================================================== */
-
-  function applyChoice(choice) {
-
-    const effects =
-      choice.effects;
-
-
-    Object.keys(effects)
-      .forEach(key => {
-
-        const value =
-          effects[key];
-
-
-        if (key === "story") {
-
-          addHistory(
-            `🧠 ${value}`
-          );
-
-          return;
-        }
-
-
-        if (
-          ["shoot",
-           "pass",
-           "defense",
-           "phys",
-           "mental"].includes(key)
-        ) {
-
-          game.skills[key] =
-            clamp(
-              game.skills[key] + value,
-              1,
-              99
-            );
-
-          return;
-        }
-
-
-        if (
-          ["form",
-           "morale",
-           "reputation",
-           "popularity"].includes(key)
-        ) {
-
-          game[key] =
-            clamp(
-              game[key] + value
-            );
-
-        }
-
-      });
-
-
-    updateUI();
-
-    saveGame(false);
-
-    notify("🧠 Ton choix a des conséquences");
-  }
-
-
-  /* ========================================================
-     MATCH
-  ======================================================== */
-
-  function playMatch() {
-
-    if (!game) return;
-
-
-    if (game.injured) {
-
-      notify(
-        "🩹 Tu ne peux pas jouer blessé."
-      );
-
-      return;
-    }
-
-
-    const rating =
-      overall();
-
-
-    const performance =
-      rating +
-      random(-12, 12) +
-      (game.form - 70) * .2 +
-      (game.morale - 60) * .12;
-
-
-    const opponent =
-      random(58, 94);
-
-
-    const win =
-      performance >= opponent;
-
-
-    let points =
-      Math.round(
-        rating / 5 +
-        random(-3, 9)
-      );
-
-
-    let rebounds =
-      Math.round(
-        game.skills.phys / 15 +
-        random(0, 4)
-      );
-
-
-    let assists =
-      Math.round(
-        game.skills.pass / 16 +
-        random(0, 3)
-      );
-
-
-    let steals =
-      Math.max(
-        0,
-        Math.round(
-          game.skills.defense / 32 +
-          random(0, 1)
-        )
-      );
-
-
-    let blocks =
-      game.position === "Pivot"
-        ? random(0, 3)
-        : random(0, 1);
-
-
-    points =
-      Math.max(2, points);
-
-    rebounds =
-      Math.max(0, rebounds);
-
-    assists =
-      Math.max(0, assists);
-
-
-    game.stats.games++;
-
-    game.stats.points +=
-      points;
-
-    game.stats.rebounds +=
-      rebounds;
-
-    game.stats.assists +=
-      assists;
-
-    game.stats.steals +=
-      steals;
-
-    game.stats.blocks +=
-      blocks;
-
-
-    if (win) {
-
-      game.stats.wins++;
-
-      game.morale =
-        clamp(
-          game.morale + random(2, 6)
-        );
-
-      game.form =
-        clamp(
-          game.form + random(1, 4)
-        );
-
-      game.reputation =
-        clamp(
-          game.reputation + random(1, 3)
-        );
-
-    } else {
-
-      game.stats.losses++;
-
-      game.morale =
-        clamp(
-          game.morale - random(1, 5)
-        );
-
-      game.form =
-        clamp(
-          game.form - random(1, 5)
-        );
-
-    }
-
-
-    addHistory(
-      `${win ? "🟢 Victoire" : "🔴 Défaite"} — ` +
-      `${points} pts, ` +
-      `${rebounds} reb, ` +
-      `${assists} ast.`
-    );
-
-
-    /*
-      Blessure
-    */
-
-    if (
-      Math.random() <
-      (game.form < 35 ? .14 : .035)
-    ) {
-
-      game.injured = true;
-
-      game.injuryMatches =
-        random(1, 3);
-
-      addHistory(
-        `🩹 Blessure : ` +
-        `${game.injuryMatches} match(s) d'absence.`
-      );
-
-    }
-
-
-    game.match++;
-
-
-    notify(
-      `${win ? "🏆 Victoire" : "💥 Défaite"} — ${points} points`
-    );
-
-
-    if (game.match >= 10) {
-
-      finishSeason();
-
-    } else {
-
-      updateUI();
-
-      setTimeout(
-        generateEvent,
-        300
-      );
-
-    }
-
-
-    saveGame(false);
-  }
-
-
-  /* ========================================================
-     FIN DE SAISON
-  ======================================================== */
-
-  function finishSeason() {
-
-    const games =
-      Math.max(
-        1,
-        game.stats.games
-      );
-
-
-    const average =
-      game.stats.points /
-      games;
-
-
-    const wins =
-      game.stats.wins;
-
-
-    const rating =
-      overall();
-
-
-    let champion =
-      false;
-
-
-    if (
-      wins >= 7 &&
-      Math.random() < .75
-    ) {
-
-      champion = true;
-
-      addTrophy(
-        `Champion — Saison ${game.season}`
-      );
-
-    }
-
-
-    if (
-      average >= 20 &&
-      rating >= 78
-    ) {
-
-      addTrophy(
-        `Meilleur scoreur — Saison ${game.season}`
-      );
-
-    }
-
-
-    if (
-      game.stats.assists / games >= 6 &&
-      game.skills.pass >= 75
-    ) {
-
-      addTrophy(
-        `Meilleur passeur — Saison ${game.season}`
-      );
-
-    }
-
-
-    if (
-      rating >
+function story(avg){
+ let s=game.first+" "+game.last+" commence sa carrière professionnelle à "+game.clubs[0]+". ";
+ s+="Saison après saison, ses performances lui permettent de progresser et de découvrir de nouveaux clubs. ";
+ s+="Son parcours l'a mené par "+game.clubs.join(" → ")+". ";
+ s+="Au total, il dispute "+game.stats.games+" matchs, inscrit "+game.stats.points+" points, prend "+game.stats.rebounds+" rebonds et délivre "+game.stats.assists+" passes. ";
+ s+="Il termine avec une note de "+overall()+"/99 et une moyenne de "+avg.toFixed(1)+" points par match. ";
+ if(game.trophies.length)s+="Son palmarès compte "+game.trophies.length+" trophée"+(game.trophies.length>1?"s":"")+". ";
+ if(game.nationalTeam)s+="Il porte également le maillot national à "+game.nationalCaps+" reprises. ";
+ s+="À "+game.age+" ans, il décide finalement de mettre un terme à sa carrière.";
+ return s;
+}
+
+function retire(){
+ game.retired=true;
+
+ let g=Math.max(1,game.stats.games);
+ let avg=game.stats.points/g;
+
+ $("endTitle").textContent=game.trophies.length>=8
+ ?"👑 Une véritable légende."
+ :game.trophies.length>=4
+ ?"🏆 Une carrière exceptionnelle."
+ :game.trophies.length
+ ?"⭐ Une très belle carrière."
+ :"🏀 Une carrière unique.";
+
+ $("endStory").textContent=story(avg);
+
+ let data=[
+ ["NOTE FINALE",overall()],
+ ["MATCHS",game.stats.games],
+ ["POINTS / MATCH",avg.toFixed(1)],
+ ["TROPHÉES",game.trophies.length],
+ ["CLUBS",game.clubs.length],
+ ["SÉLECTIONS",game.nationalCaps]
+ ];
+
+ $("endStats").innerHTML=data.map(x=>
+ '<div class="info-card"><b>'+x[0]+"</b><span>"+x[1]+"</span></div>"
+ ).join("");
+
+ save();
+ screen("screen-career-end");
+}
+
+async function share(){
+ if(!game)return;
+
+ let avg=game.stats.games?game.stats.points/game.stats.games:0;
+
+ let text=
+`🏀 BASKET JOURNEY
+
+👤 ${game.first} ${game.last}
+🎂 ${game.age} ans
+🏀 ${game.position}
+📏 ${game.height}
+🔥 Style : ${game.style}
+
+📖 MA CARRIÈRE
+
+${story(avg)}
+
+📊 STATISTIQUES
+
+Matchs : ${game.stats.games}
+Points : ${game.stats.points}
+Points/match : ${avg.toFixed(1)}
+Rebonds : ${game.stats.rebounds}
+Passes : ${game.stats.assists}
+Interceptions : ${game.stats.steals}
+Contres : ${game.stats.blocks}
+
+🏆 PALMARÈS
+
+${game.trophies.length?game.trophies.map(x=>"🏆 "+x).join("\n"):"Aucun trophée"}
+
+🏟️ CLUBS
+
+${game.clubs.join(" → ")}
+
+⭐ NOTE FINALE
+
+${overall()}/99
+
+🇫🇷 SÉLECTIONS
+
+${game.nationalCaps}`;
+
+ $("shareText").value=text;
+ $("shareText").classList.remove("hidden");
+
+ try{
+  await navigator.clipboard.writeText(text);
+  toast("📋 Carrière copiée !");
+ }catch(e){
+  $("shareText").select();
+  toast("📖 Résumé généré !");
+ }
+}
+
+$("newCareer").onclick=()=>screen("screen-create");
+
+$("continueCareer").onclick=()=>{
+ if(!load()){
+  toast("Aucune carrière sauvegardée.");
+  return;
+ }
+ if(game.retired){
+  let avg=game.stats.games?game.stats.points/game.stats.games:0;
+  $("endStory").textContent=story(avg);
+  screen("screen-career-end");
+ }else{
+  screen("screen-career");
+  update();
+  event();
+ }
+};
+
+$("createPlayer").onclick=create;
+$("playMatch").onclick=match;
+$("saveBtn").onclick=()=>{
+ save();toast("💾 Carrière sauvegardée");
+};
+$("shareBtn").onclick=share;
+
+$("restartBtn").onclick=()=>{
+ localStorage.removeItem(KEY);
+ game=null;
+ screen("screen-create");
+};
+
+document.querySelectorAll("#styleChoices button").forEach(b=>{
+ b.onclick=()=>{
+  document.querySelectorAll("#styleChoices button").forEach(x=>x.classList.remove("selected"));
+  b.classList.add("selected");
+  style=b.dataset.style;
+ };
+});
+
+if(load()){
+ $("continueCareer").classList.remove("hidden");
+ if(game.retired)$("continueCareer").textContent="🏆 Voir ma carrière";
+}
+
+let first=document.querySelector('#styleChoices [data-style="scoreur"]');
+if(first)first.classList.add("selected");
+
+});
