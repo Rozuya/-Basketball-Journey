@@ -1,0 +1,789 @@
+/* =========================================================
+   BASKETBALL JOURNEY
+   STYLE PRINCIPAL
+========================================================= */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg: #0b0d12;
+  --bg-secondary: #11141b;
+  --card: #171b24;
+  --card-hover: #1d222d;
+  --border: #292f3b;
+  --text: #f5f7fa;
+  --muted: #9299a8;
+  --primary: #ff7a18;
+  --primary-hover: #ff8f3d;
+  --success: #36d98b;
+  --danger: #ff5d6c;
+  --radius: 16px;
+}
+
+html {
+  min-height: 100%;
+  background: var(--bg);
+}
+
+body {
+  min-height: 100vh;
+  font-family: Arial, Helvetica, sans-serif;
+  background:
+    radial-gradient(circle at top, rgba(255, 122, 24, 0.08), transparent 35%),
+    var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+
+/* =========================================================
+   STRUCTURE
+========================================================= */
+
+#app {
+  min-height: 100vh;
+}
+
+.screen {
+  min-height: 100vh;
+  padding: 40px 20px;
+}
+
+.screen[hidden] {
+  display: none !important;
+}
+
+.container {
+  width: min(1100px, 100%);
+  margin: 0 auto;
+}
+
+.narrow-container {
+  width: min(600px, 100%);
+  margin: 0 auto;
+}
+
+.home-container {
+  min-height: calc(100vh - 80px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+
+/* =========================================================
+   ACCUEIL
+========================================================= */
+
+.game-logo {
+  width: 92px;
+  height: 92px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--card);
+  border: 1px solid var(--border);
+  font-size: 46px;
+  margin-bottom: 25px;
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.3);
+}
+
+h1 {
+  font-size: clamp(38px, 7vw, 70px);
+  line-height: 1;
+  letter-spacing: -2px;
+  margin-bottom: 15px;
+}
+
+.subtitle {
+  color: var(--muted);
+  font-size: 18px;
+  max-width: 600px;
+}
+
+.home-actions {
+  width: min(420px, 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 35px;
+}
+
+.save-info {
+  margin-top: 18px;
+}
+
+
+/* =========================================================
+   HEADERS
+========================================================= */
+
+.screen-header {
+  margin-bottom: 35px;
+}
+
+.screen-header h2 {
+  font-size: clamp(30px, 5vw, 48px);
+  line-height: 1.1;
+  margin: 8px 0 10px;
+}
+
+.screen-header p {
+  color: var(--muted);
+}
+
+.step-label,
+.eyebrow {
+  display: inline-block;
+  color: var(--primary);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+
+/* =========================================================
+   FORMULAIRES
+========================================================= */
+
+.form-group {
+  margin-bottom: 24px;
+}
+
+.form-group label,
+.form-group legend {
+  display: block;
+  color: var(--text);
+  font-weight: 700;
+  margin-bottom: 9px;
+}
+
+.form-group input {
+  width: 100%;
+  height: 54px;
+  padding: 0 16px;
+  color: var(--text);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  outline: none;
+  transition: 0.2s ease;
+}
+
+.form-group input::placeholder {
+  color: #626978;
+}
+
+.form-group input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(255, 122, 24, 0.12);
+}
+
+.field-error {
+  min-height: 20px;
+  margin-top: 6px;
+  color: var(--danger);
+  font-size: 13px;
+}
+
+
+/* =========================================================
+   BOUTONS
+========================================================= */
+
+.btn {
+  min-height: 52px;
+  border: 0;
+  border-radius: 12px;
+  padding: 0 22px;
+  font-weight: 800;
+  transition:
+    transform 0.15s ease,
+    background 0.15s ease,
+    opacity 0.15s ease;
+}
+
+.btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+.btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btn-primary {
+  color: #fff;
+  background: var(--primary);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--primary-hover);
+}
+
+.btn-secondary {
+  color: var(--text);
+  background: var(--card);
+  border: 1px solid var(--border);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: var(--card-hover);
+}
+
+.btn-full {
+  width: 100%;
+}
+
+.form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 30px;
+}
+
+.form-actions .btn {
+  flex: 1;
+}
+
+
+/* =========================================================
+   RÉGIONS
+========================================================= */
+
+.selection-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.region-card {
+  position: relative;
+  min-height: 100px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: left;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition: 0.2s ease;
+  cursor: pointer;
+}
+
+.region-card:hover {
+  transform: translateY(-3px);
+  background: var(--card-hover);
+  border-color: #3b4352;
+}
+
+.region-card.selected {
+  border-color: var(--primary);
+  background: rgba(255, 122, 24, 0.08);
+  box-shadow: 0 0 0 1px var(--primary);
+}
+
+.region-card input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.region-name {
+  font-weight: 800;
+  font-size: 16px;
+}
+
+.region-type {
+  color: var(--muted);
+  font-size: 12px;
+  margin-top: 3px;
+}
+
+
+/* =========================================================
+   CLUBS
+========================================================= */
+
+.club-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.club-card {
+  padding: 22px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition: 0.2s ease;
+}
+
+.club-card:hover {
+  transform: translateY(-3px);
+  background: var(--card-hover);
+  border-color: #3b4352;
+}
+
+.club-card h3 {
+  font-size: 19px;
+  margin-bottom: 5px;
+}
+
+.club-city {
+  color: var(--muted);
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+.club-level {
+  display: inline-flex;
+  padding: 5px 9px;
+  border-radius: 7px;
+  background: rgba(255, 122, 24, 0.1);
+  color: var(--primary);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+}
+
+.club-card .btn {
+  width: 100%;
+}
+
+
+/* =========================================================
+   RÉSUMÉ CARRIÈRE
+========================================================= */
+
+.career-summary {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: 25px;
+}
+
+.summary-row {
+  min-height: 58px;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.summary-row:last-child {
+  border-bottom: 0;
+}
+
+.summary-row span {
+  color: var(--muted);
+}
+
+.summary-row strong {
+  text-align: right;
+}
+
+
+/* =========================================================
+   EN-TÊTE CARRIÈRE
+========================================================= */
+
+.career-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 30px;
+  align-items: flex-end;
+  margin-bottom: 30px;
+}
+
+.career-header h2 {
+  font-size: clamp(30px, 5vw, 46px);
+  margin: 5px 0;
+}
+
+.career-header p {
+  color: var(--muted);
+}
+
+.career-meta {
+  display: flex;
+  gap: 10px;
+}
+
+.career-meta > div {
+  min-width: 95px;
+  padding: 13px 16px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  text-align: center;
+}
+
+.career-meta span {
+  display: block;
+  color: var(--muted);
+  font-size: 11px;
+  text-transform: uppercase;
+  margin-bottom: 3px;
+}
+
+.career-meta strong {
+  font-size: 24px;
+}
+
+
+/* =========================================================
+   PANNEAUX CARRIÈRE
+========================================================= */
+
+.career-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.panel {
+  padding: 22px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.panel-wide {
+  grid-column: 1 / -1;
+}
+
+.panel-heading {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 18px;
+}
+
+.panel-heading span {
+  font-size: 20px;
+}
+
+.panel-heading h3 {
+  font-size: 17px;
+}
+
+.panel > p:not(.muted) {
+  font-size: 22px;
+  font-weight: 800;
+}
+
+
+/* =========================================================
+   STATISTIQUES
+========================================================= */
+
+.stat-list {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+
+.stat-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.stat-row span {
+  color: var(--muted);
+}
+
+.stat-row strong {
+  min-width: 35px;
+  text-align: right;
+}
+
+
+/* =========================================================
+   SITUATIONS
+========================================================= */
+
+#situation-text {
+  font-size: 18px;
+  line-height: 1.7;
+  color: var(--text);
+  margin-bottom: 22px;
+}
+
+.choice-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.choice-btn {
+  width: 100%;
+  padding: 16px 18px;
+  text-align: left;
+  color: var(--text);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  transition: 0.2s ease;
+}
+
+.choice-btn:hover {
+  background: var(--card-hover);
+  border-color: var(--primary);
+  transform: translateX(3px);
+}
+
+.choice-btn strong {
+  display: block;
+  margin-bottom: 3px;
+}
+
+.choice-btn small {
+  color: var(--muted);
+}
+
+
+/* =========================================================
+   PROGRESSION
+========================================================= */
+
+.progression-card {
+  padding: 35px 25px;
+  text-align: center;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 20px;
+}
+
+.progression-card > p:first-child {
+  color: var(--muted);
+  margin-bottom: 20px;
+}
+
+.overall-change {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 18px;
+  font-size: 28px;
+  color: var(--muted);
+}
+
+.overall-change strong {
+  color: var(--success);
+  font-size: 48px;
+}
+
+.overall-change-label {
+  margin-top: 6px;
+  font-weight: 800;
+}
+
+.positive {
+  color: var(--success);
+}
+
+.stat-change-list {
+  margin-top: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  text-align: left;
+}
+
+.stat-change {
+  display: flex;
+  justify-content: space-between;
+  padding: 11px 13px;
+  border-radius: 9px;
+  background: var(--bg-secondary);
+}
+
+.stat-change strong {
+  color: var(--success);
+}
+
+
+/* =========================================================
+   UTILITAIRES
+========================================================= */
+
+.muted {
+  color: var(--muted);
+}
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 25px;
+  transform: translateX(-50%);
+  z-index: 100;
+  max-width: calc(100% - 30px);
+  padding: 12px 18px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: #191d26;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.35);
+  font-size: 14px;
+}
+
+
+/* =========================================================
+   RESPONSIVE TABLETTE
+========================================================= */
+
+@media (max-width: 850px) {
+
+  .selection-grid,
+  .club-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .career-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .panel-wide {
+    grid-column: auto;
+  }
+}
+
+
+/* =========================================================
+   RESPONSIVE MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+
+  .screen {
+    padding: 25px 15px;
+  }
+
+  .home-container {
+    min-height: calc(100vh - 50px);
+  }
+
+  h1 {
+    letter-spacing: -1px;
+  }
+
+  .subtitle {
+    font-size: 15px;
+  }
+
+  .screen-header {
+    margin-bottom: 25px;
+  }
+
+  .screen-header h2 {
+    font-size: 30px;
+  }
+
+  .selection-grid,
+  .club-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+  }
+
+  .form-actions .btn {
+    width: 100%;
+  }
+
+  .career-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 18px;
+  }
+
+  .career-meta {
+    width: 100%;
+  }
+
+  .career-meta > div {
+    flex: 1;
+  }
+
+  .career-header h2 {
+    font-size: 32px;
+  }
+
+  .panel {
+    padding: 18px;
+  }
+
+  .progression-card {
+    padding: 28px 18px;
+  }
+
+  .overall-change strong {
+    font-size: 42px;
+  }
+
+  .summary-row {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .summary-row strong {
+    text-align: left;
+  }
+}
+
+
+/* =========================================================
+   PETITS ÉCRANS
+========================================================= */
+
+@media (max-width: 380px) {
+
+  .game-logo {
+    width: 75px;
+    height: 75px;
+    font-size: 37px;
+  }
+
+  .career-meta > div {
+    min-width: 0;
+    padding: 11px 8px;
+  }
+
+  .career-meta strong {
+    font-size: 21px;
+  }
+
+  .btn {
+    min-height: 48px;
+  }
+  }
