@@ -1,1 +1,698 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <meta name="theme-color" content="#080c17">
 
+  <title>Basket Journey</title>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <div id="app">
+
+    <!-- ================= HEADER ================= -->
+
+    <header class="topbar">
+
+      <div>
+        <div class="brand">
+          🏀 BASKET JOURNEY
+        </div>
+
+        <div class="sub" id="seasonLabel">
+          Ta carrière. Tes choix. Ton histoire.
+        </div>
+      </div>
+
+      <button class="ghost" id="saveBtn">
+        💾 Sauvegarder
+      </button>
+
+    </header>
+
+
+    <!-- ================= CONTENU ================= -->
+
+    <main>
+
+
+      <!-- ================= ACCUEIL ================= -->
+
+      <section id="screen-home" class="screen active">
+
+        <div class="hero">
+
+          <span class="pill">
+            CAREER MODE
+          </span>
+
+          <h1>
+            Construis ta légende.
+          </h1>
+
+          <p>
+            Pars de zéro, progresse saison après saison,
+            change de club, gagne des trophées et écris
+            ton propre parcours.
+          </p>
+
+          <div class="hero-actions">
+
+            <button
+              class="primary"
+              id="newCareer">
+              🏀 Nouvelle carrière
+            </button>
+
+            <button
+              class="secondary hidden"
+              id="continueCareer">
+              ▶ Continuer
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <div class="cards three">
+
+          <div class="info-card">
+            <b>📈 Progression</b>
+            <span>
+              Fais évoluer ta note, tes statistiques,
+              ta forme et ta confiance.
+            </span>
+          </div>
+
+          <div class="info-card">
+            <b>🧠 Tes choix</b>
+            <span>
+              Chaque décision peut améliorer ou
+              compliquer ta carrière.
+            </span>
+          </div>
+
+          <div class="info-card">
+            <b>🏆 Ton héritage</b>
+            <span>
+              Gagne des titres et construis ton
+              histoire de basketteur.
+            </span>
+          </div>
+
+        </div>
+
+      </section>
+
+
+
+      <!-- ================= CREATION ================= -->
+
+      <section id="screen-create" class="screen">
+
+        <div class="panel narrow">
+
+          <span class="pill">
+            ÉTAPE 1
+          </span>
+
+          <h2>
+            Crée ton joueur
+          </h2>
+
+
+          <div class="form-grid">
+
+            <label>
+              Prénom
+              <input
+                id="firstName"
+                maxlength="18"
+                placeholder="Yanis">
+            </label>
+
+
+            <label>
+              Nom
+              <input
+                id="lastName"
+                maxlength="18"
+                placeholder="Jordan">
+            </label>
+
+
+            <label>
+              Âge
+
+              <select id="age">
+
+                <option>16</option>
+                <option>17</option>
+                <option selected>18</option>
+                <option>19</option>
+                <option>20</option>
+                <option>21</option>
+
+              </select>
+
+            </label>
+
+
+            <label>
+              Poste
+
+              <select id="position">
+
+                <option>Meneur</option>
+                <option>Arrière</option>
+                <option>Ailier</option>
+                <option>Ailier fort</option>
+                <option>Pivot</option>
+
+              </select>
+
+            </label>
+
+
+            <label>
+              Taille
+
+              <select id="height">
+
+                <option>1m78</option>
+                <option>1m83</option>
+                <option selected>1m88</option>
+                <option>1m93</option>
+                <option>1m98</option>
+                <option>2m03</option>
+                <option>2m08</option>
+                <option>2m13</option>
+
+              </select>
+
+            </label>
+
+
+            <label>
+              Pays
+
+              <input
+                id="country"
+                maxlength="20"
+                value="France">
+
+            </label>
+
+          </div>
+
+
+          <h3>
+            Style de jeu
+          </h3>
+
+
+          <div
+            class="choice-grid"
+            id="styleChoices">
+
+
+            <button data-style="scoreur">
+
+              <b>
+                🔥 Scoreur
+              </b>
+
+              <small>
+                +tir • +attaque
+              </small>
+
+            </button>
+
+
+            <button data-style="createur">
+
+              <b>
+                🎯 Créateur
+              </b>
+
+              <small>
+                +passes • +vision
+              </small>
+
+            </button>
+
+
+            <button data-style="defenseur">
+
+              <b>
+                🛡️ Défenseur
+              </b>
+
+              <small>
+                +défense • +physique
+              </small>
+
+            </button>
+
+
+            <button data-style="interieur">
+
+              <b>
+                💪 Intérieur
+              </b>
+
+              <small>
+                +rebonds • +physique
+              </small>
+
+            </button>
+
+
+          </div>
+
+
+          <button
+            class="primary full"
+            id="createPlayer">
+
+            Commencer ma carrière
+
+          </button>
+
+        </div>
+
+      </section>
+
+
+
+      <!-- ================= CARRIERE ================= -->
+
+      <section
+        id="screen-career"
+        class="screen">
+
+
+        <!-- JOUEUR -->
+
+        <div class="player-head panel">
+
+          <div>
+
+            <span
+              class="pill"
+              id="clubPill">
+              CLUB
+            </span>
+
+            <h2 id="playerName">
+              Joueur
+            </h2>
+
+            <p id="playerMeta">
+              Joueur • Poste • Taille
+            </p>
+
+          </div>
+
+
+          <div class="overall">
+
+            <span>
+              NOTE
+            </span>
+
+            <strong id="overall">
+              60
+            </strong>
+
+          </div>
+
+        </div>
+
+
+
+        <!-- STATUTS -->
+
+        <div class="stats-grid">
+
+
+          <div class="stat">
+
+            <span>
+              ⚡ Forme
+            </span>
+
+            <b id="form">
+              80
+            </b>
+
+            <i>
+              <em id="formBar"></em>
+            </i>
+
+          </div>
+
+
+          <div class="stat">
+
+            <span>
+              ❤️ Moral
+            </span>
+
+            <b id="morale">
+              70
+            </b>
+
+            <i>
+              <em id="moraleBar"></em>
+            </i>
+
+          </div>
+
+
+          <div class="stat">
+
+            <span>
+              ⭐ Réputation
+            </span>
+
+            <b id="reputation">
+              10
+            </b>
+
+            <i>
+              <em id="repBar"></em>
+            </i>
+
+          </div>
+
+
+          <div class="stat">
+
+            <span>
+              💰 Salaire
+            </span>
+
+            <b id="salary">
+              0 €
+            </b>
+
+            <small>
+              / mois
+            </small>
+
+          </div>
+
+        </div>
+
+
+
+        <!-- CONTENU -->
+
+        <div class="layout">
+
+
+          <div>
+
+
+            <!-- EVENEMENT -->
+
+            <div class="panel">
+
+              <div class="panel-title">
+
+                <span id="eventTag">
+                  ÉVÉNEMENT
+                </span>
+
+                <span id="progressText">
+                  S1
+                </span>
+
+              </div>
+
+
+              <h2 id="eventTitle">
+                Bienvenue
+              </h2>
+
+
+              <p id="eventText">
+                Ta carrière commence.
+              </p>
+
+
+              <div
+                id="choices"
+                class="choices">
+              </div>
+
+            </div>
+
+
+
+            <!-- MATCH -->
+
+            <div class="panel match-panel">
+
+              <div class="panel-title">
+
+                <span>
+                  🏀 SAISON
+                </span>
+
+                <span id="seasonProgress">
+                  1/10
+                </span>
+
+              </div>
+
+
+              <h3 id="nextMatch">
+                Prochaine étape
+              </h3>
+
+
+              <p id="matchInfo">
+                Continue ta carrière.
+              </p>
+
+
+              <button
+                class="primary full"
+                id="playMatch">
+
+                Jouer le prochain match
+
+              </button>
+
+            </div>
+
+
+          </div>
+
+
+
+          <!-- COLONNE DROITE -->
+
+          <aside>
+
+
+            <!-- STATS -->
+
+            <div class="panel">
+
+              <div class="panel-title">
+
+                <span>
+                  📊 STATS
+                </span>
+
+              </div>
+
+
+              <div class="mini-stats">
+
+                <span>
+                  Matchs
+                  <b id="games">0</b>
+                </span>
+
+                <span>
+                  Points
+                  <b id="points">0</b>
+                </span>
+
+                <span>
+                  Rebonds
+                  <b id="rebounds">0</b>
+                </span>
+
+                <span>
+                  Passes
+                  <b id="assists">0</b>
+                </span>
+
+                <span>
+                  Interceptions
+                  <b id="steals">0</b>
+                </span>
+
+                <span>
+                  Contres
+                  <b id="blocks">0</b>
+                </span>
+
+              </div>
+
+            </div>
+
+
+
+            <!-- TROPHÉES -->
+
+            <div class="panel">
+
+              <div class="panel-title">
+
+                <span>
+                  🏆 PALMARÈS
+                </span>
+
+              </div>
+
+
+              <div
+                id="trophies"
+                class="trophies">
+
+                Aucun trophée
+
+              </div>
+
+            </div>
+
+
+
+            <!-- HISTORIQUE -->
+
+            <div class="panel">
+
+              <div class="panel-title">
+
+                <span>
+                  📜 CARRIÈRE
+                </span>
+
+              </div>
+
+
+              <div
+                id="history"
+                class="history">
+
+                Début de carrière...
+
+              </div>
+
+            </div>
+
+
+          </aside>
+
+        </div>
+
+      </section>
+
+
+
+      <!-- ================= FIN DE CARRIERE ================= -->
+
+      <section
+        id="screen-career-end"
+        class="screen">
+
+
+        <div class="panel end-panel">
+
+          <span class="pill">
+            FIN DE CARRIÈRE
+          </span>
+
+
+          <h1 id="endTitle">
+            Une légende est née.
+          </h1>
+
+
+          <p id="endStory">
+            Ton histoire s'est terminée.
+          </p>
+
+
+          <div
+            id="endStats"
+            class="cards three">
+          </div>
+
+
+          <div class="hero-actions">
+
+
+            <button
+              class="primary"
+              id="shareBtn">
+
+              📤 Partager ma carrière
+
+            </button>
+
+
+            <button
+              class="secondary"
+              id="restartBtn">
+
+              🔄 Nouvelle carrière
+
+            </button>
+
+
+          </div>
+
+
+          <textarea
+            id="shareText"
+            class="sharebox hidden"
+            readonly>
+          </textarea>
+
+        </div>
+
+      </section>
+
+    </main>
+
+
+
+    <!-- ================= NOTIFICATION ================= -->
+
+    <div
+      id="toast"
+      class="toast">
+    </div>
+
+
+  </div>
+
+
+  <!-- JAVASCRIPT -->
+
+  <script src="script.js"></script>
+
+</body>
+  </html>
