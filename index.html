@@ -1,48 +1,80 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <meta name="theme-color" content="#080c17">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="theme-color"
+    content="#080c17"
+  >
 
   <title>Basket Journey</title>
 
-  <link rel="stylesheet" href="style.css">
+  <link
+    rel="stylesheet"
+    href="./style.css"
+  >
+
 </head>
 
 <body>
 
   <div id="app">
 
-    <!-- ================= HEADER ================= -->
+    <!-- =========================
+         HEADER
+    ========================== -->
 
     <header class="topbar">
 
       <div>
+
         <div class="brand">
           🏀 BASKET JOURNEY
         </div>
 
-        <div class="sub" id="seasonLabel">
+        <div
+          class="sub"
+          id="seasonLabel"
+        >
           Ta carrière. Tes choix. Ton histoire.
         </div>
+
       </div>
 
-      <button class="ghost" id="saveBtn">
+
+      <button
+        class="ghost"
+        id="saveBtn"
+        type="button"
+      >
         💾 Sauvegarder
       </button>
 
     </header>
 
 
-    <!-- ================= CONTENU ================= -->
+    <!-- =========================
+         CONTENU
+    ========================== -->
 
     <main>
 
 
-      <!-- ================= ACCUEIL ================= -->
+      <!-- =========================
+           ACCUEIL
+      ========================== -->
 
-      <section id="screen-home" class="screen active">
+      <section
+        id="screen-home"
+        class="screen active"
+      >
 
         <div class="hero">
 
@@ -60,17 +92,23 @@
             ton propre parcours.
           </p>
 
+
           <div class="hero-actions">
 
             <button
               class="primary"
-              id="newCareer">
+              id="newCareer"
+              type="button"
+            >
               🏀 Nouvelle carrière
             </button>
 
+
             <button
               class="secondary hidden"
-              id="continueCareer">
+              id="continueCareer"
+              type="button"
+            >
               ▶ Continuer
             </button>
 
@@ -82,27 +120,44 @@
         <div class="cards three">
 
           <div class="info-card">
-            <b>📈 Progression</b>
+
+            <b>
+              📈 Progression
+            </b>
+
             <span>
               Fais évoluer ta note, tes statistiques,
               ta forme et ta confiance.
             </span>
+
           </div>
 
+
           <div class="info-card">
-            <b>🧠 Tes choix</b>
+
+            <b>
+              🧠 Tes choix
+            </b>
+
             <span>
               Chaque décision peut améliorer ou
               compliquer ta carrière.
             </span>
+
           </div>
 
+
           <div class="info-card">
-            <b>🏆 Ton héritage</b>
+
+            <b>
+              🏆 Ton héritage
+            </b>
+
             <span>
               Gagne des titres et construis ton
               histoire de basketteur.
             </span>
+
           </div>
 
         </div>
@@ -110,16 +165,21 @@
       </section>
 
 
+      <!-- =========================
+           CREATION
+      ========================== -->
 
-      <!-- ================= CREATION ================= -->
-
-      <section id="screen-create" class="screen">
+      <section
+        id="screen-create"
+        class="screen"
+      >
 
         <div class="panel narrow">
 
           <span class="pill">
             ÉTAPE 1
           </span>
+
 
           <h2>
             Crée ton joueur
@@ -129,34 +189,65 @@
           <div class="form-grid">
 
             <label>
+
               Prénom
+
               <input
                 id="firstName"
+                type="text"
                 maxlength="18"
-                placeholder="Yanis">
+                placeholder="Yanis"
+              >
+
             </label>
 
 
             <label>
+
               Nom
+
               <input
                 id="lastName"
+                type="text"
                 maxlength="18"
-                placeholder="Jordan">
+                placeholder="Jordan"
+              >
+
             </label>
 
 
             <label>
+
               Âge
 
               <select id="age">
 
-                <option>16</option>
-                <option>17</option>
-                <option selected>18</option>
-                <option>19</option>
-                <option>20</option>
-                <option>21</option>
+                <option value="16">
+                  16
+                </option>
+
+                <option value="17">
+                  17
+                </option>
+
+                <option
+                  value="18"
+                  selected
+                >
+                  18
+                </option>
+
+                <option value="19">
+                  19
+                </option>
+
+                <option value="20">
+                  20
+                </option>
+
+                <option value="21">
+                  21
+                </option>
 
               </select>
 
@@ -164,15 +255,30 @@
 
 
             <label>
+
               Poste
 
               <select id="position">
 
-                <option>Meneur</option>
-                <option>Arrière</option>
-                <option>Ailier</option>
-                <option>Ailier fort</option>
-                <option>Pivot</option>
+                <option>
+                  Meneur
+                </option>
+
+                <option>
+                  Arrière
+                </option>
+
+                <option>
+                  Ailier
+                </option>
+
+                <option>
+                  Ailier fort
+                </option>
+
+                <option>
+                  Pivot
+                </option>
 
               </select>
 
@@ -180,18 +286,42 @@
 
 
             <label>
+
               Taille
 
               <select id="height">
 
-                <option>1m78</option>
-                <option>1m83</option>
-                <option selected>1m88</option>
-                <option>1m93</option>
-                <option>1m98</option>
-                <option>2m03</option>
-                <option>2m08</option>
-                <option>2m13</option>
+                <option>
+                  1m78
+                </option>
+
+                <option>
+                  1m83
+                </option>
+
+                <option selected>
+                  1m88
+                </option>
+
+                <option>
+                  1m93
+                </option>
+
+                <option>
+                  1m98
+                </option>
+
+                <option>
+                  2m03
+                </option>
+
+                <option>
+                  2m08
+                </option>
+
+                <option>
+                  2m13
+                </option>
 
               </select>
 
@@ -199,12 +329,15 @@
 
 
             <label>
+
               Pays
 
               <input
                 id="country"
+                type="text"
                 maxlength="20"
-                value="France">
+                value="France"
+              >
 
             </label>
 
@@ -218,10 +351,13 @@
 
           <div
             class="choice-grid"
-            id="styleChoices">
+            id="styleChoices"
+          >
 
-
-            <button data-style="scoreur">
+            <button
+              type="button"
+              data-style="scoreur"
+            >
 
               <b>
                 🔥 Scoreur
@@ -234,7 +370,10 @@
             </button>
 
 
-            <button data-style="createur">
+            <button
+              type="button"
+              data-style="createur"
+            >
 
               <b>
                 🎯 Créateur
@@ -247,7 +386,10 @@
             </button>
 
 
-            <button data-style="defenseur">
+            <button
+              type="button"
+              data-style="defenseur"
+            >
 
               <b>
                 🛡️ Défenseur
@@ -260,7 +402,10 @@
             </button>
 
 
-            <button data-style="interieur">
+            <button
+              type="button"
+              data-style="interieur"
+            >
 
               <b>
                 💪 Intérieur
@@ -272,16 +417,15 @@
 
             </button>
 
-
           </div>
 
 
           <button
             class="primary full"
-            id="createPlayer">
-
+            id="createPlayer"
+            type="button"
+          >
             Commencer ma carrière
-
           </button>
 
         </div>
@@ -289,15 +433,14 @@
       </section>
 
 
-
-      <!-- ================= CARRIERE ================= -->
+      <!-- =========================
+           CARRIERE
+      ========================== -->
 
       <section
         id="screen-career"
-        class="screen">
-
-
-        <!-- JOUEUR -->
+        class="screen"
+      >
 
         <div class="player-head panel">
 
@@ -305,13 +448,16 @@
 
             <span
               class="pill"
-              id="clubPill">
+              id="clubPill"
+            >
               CLUB
             </span>
+
 
             <h2 id="playerName">
               Joueur
             </h2>
+
 
             <p id="playerMeta">
               Joueur • Poste • Taille
@@ -335,11 +481,9 @@
         </div>
 
 
-
         <!-- STATUTS -->
 
         <div class="stats-grid">
-
 
           <div class="stat">
 
@@ -411,14 +555,11 @@
         </div>
 
 
-
         <!-- CONTENU -->
 
         <div class="layout">
 
-
           <div>
-
 
             <!-- EVENEMENT -->
 
@@ -449,11 +590,10 @@
 
               <div
                 id="choices"
-                class="choices">
-              </div>
+                class="choices"
+              ></div>
 
             </div>
-
 
 
             <!-- MATCH -->
@@ -485,23 +625,20 @@
 
               <button
                 class="primary full"
-                id="playMatch">
-
+                id="playMatch"
+                type="button"
+              >
                 Jouer le prochain match
-
               </button>
 
             </div>
 
-
           </div>
 
 
-
-          <!-- COLONNE DROITE -->
+          <!-- DROITE -->
 
           <aside>
-
 
             <!-- STATS -->
 
@@ -520,38 +657,54 @@
 
                 <span>
                   Matchs
-                  <b id="games">0</b>
+                  <b id="games">
+                    0
+                  </b>
                 </span>
+
 
                 <span>
                   Points
-                  <b id="points">0</b>
+                  <b id="points">
+                    0
+                  </b>
                 </span>
+
 
                 <span>
                   Rebonds
-                  <b id="rebounds">0</b>
+                  <b id="rebounds">
+                    0
+                  </b>
                 </span>
+
 
                 <span>
                   Passes
-                  <b id="assists">0</b>
+                  <b id="assists">
+                    0
+                  </b>
                 </span>
+
 
                 <span>
                   Interceptions
-                  <b id="steals">0</b>
+                  <b id="steals">
+                    0
+                  </b>
                 </span>
+
 
                 <span>
                   Contres
-                  <b id="blocks">0</b>
+                  <b id="blocks">
+                    0
+                  </b>
                 </span>
 
               </div>
 
             </div>
-
 
 
             <!-- TROPHÉES -->
@@ -569,14 +722,12 @@
 
               <div
                 id="trophies"
-                class="trophies">
-
+                class="trophies"
+              >
                 Aucun trophée
-
               </div>
 
             </div>
-
 
 
             <!-- HISTORIQUE -->
@@ -594,14 +745,12 @@
 
               <div
                 id="history"
-                class="history">
-
+                class="history"
+              >
                 Début de carrière...
-
               </div>
 
             </div>
-
 
           </aside>
 
@@ -610,13 +759,14 @@
       </section>
 
 
-
-      <!-- ================= FIN DE CARRIERE ================= -->
+      <!-- =========================
+           FIN DE CARRIERE
+      ========================== -->
 
       <section
         id="screen-career-end"
-        class="screen">
-
+        class="screen"
+      >
 
         <div class="panel end-panel">
 
@@ -637,30 +787,28 @@
 
           <div
             id="endStats"
-            class="cards three">
-          </div>
+            class="cards three"
+          ></div>
 
 
           <div class="hero-actions">
 
-
             <button
               class="primary"
-              id="shareBtn">
-
+              id="shareBtn"
+              type="button"
+            >
               📤 Partager ma carrière
-
             </button>
 
 
             <button
               class="secondary"
-              id="restartBtn">
-
+              id="restartBtn"
+              type="button"
+            >
               🔄 Nouvelle carrière
-
             </button>
-
 
           </div>
 
@@ -668,8 +816,8 @@
           <textarea
             id="shareText"
             class="sharebox hidden"
-            readonly>
-          </textarea>
+            readonly
+          ></textarea>
 
         </div>
 
@@ -678,21 +826,30 @@
     </main>
 
 
-
-    <!-- ================= NOTIFICATION ================= -->
+    <!-- NOTIFICATION -->
 
     <div
       id="toast"
-      class="toast">
-    </div>
-
+      class="toast"
+    ></div>
 
   </div>
 
 
-  <!-- JAVASCRIPT -->
+  <!-- =========================
+       TEST CHARGEMENT JS
+  ========================== -->
 
-  <script src="script.js"></script>
+  <script>
+    alert("SCRIPT JS CHARGE !");
+  </script>
+
+
+  <!-- =========================
+       SCRIPT DU JEU
+  ========================== -->
+
+  <script src="./script.js"></script>
 
 </body>
-  </html>
+</html>
